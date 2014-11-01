@@ -99,6 +99,7 @@
 		DC0C8AF61A02EAF700754A9B /* GameWorld.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = GameWorld.m; path = Source/GameWorld.m; sourceTree = "<group>"; };
 		DC0C8B021A05416300754A9B /* CCGameCameraNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CCGameCameraNode.h; path = Source/CCGameCameraNode.h; sourceTree = "<group>"; };
 		DC0C8B031A05416300754A9B /* CCGameCameraNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CCGameCameraNode.m; path = Source/CCGameCameraNode.m; sourceTree = "<group>"; };
+		DC0C8B0F1A05691900754A9B /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -180,6 +181,7 @@
 		B77F1B2517B978D7009739AE = {
 			isa = PBXGroup;
 			children = (
+				DC0C8B0F1A05691900754A9B /* README.md */,
 				B737893C1807616C0076A88C /* Source */,
 				B77F1B4617B978D7009739AE /* Resources */,
 				9222E2B918734FF800A246C7 /* libs */,
