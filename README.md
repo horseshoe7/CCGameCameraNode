@@ -22,9 +22,7 @@ It loads a test scene and allows you to pan and pinch the screen to adjust the z
 * An API that allows you to programmatically interact with the camera
 * Adding actions
 
-# What problem this won't yet solve
-
-Parallax. Seeing as positioning the camera involves adjusting the anchor point on the world node, this could present a problem with parallax nodes because we never explicitly change a position value of a node.  Will look into this.
+# What this isn't for
 
 Endless scrollers.  Not really in scope. Look somewhere else if that's what you're working on.
 
