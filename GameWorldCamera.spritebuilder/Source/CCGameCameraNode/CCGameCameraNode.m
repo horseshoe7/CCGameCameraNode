@@ -21,7 +21,7 @@
     
     // State Variables
     CGPoint _camPos;
-    float _zoomLevel;
+    float _zoomScale;
     
     // Modifiers added independently of camPos or zoomLevel
     float _zoomVariance;
@@ -60,7 +60,7 @@
                          MAX(0, gameboard.contentSize.height));
         
         
-        _zoomLevel = 1.0;  // 100%, default value
+        _zoomScale = 1.0;  // 100%, default value
         _zoomVariance = 0.0;
         _positionVariance = CGPointZero;
         _minZoom = MAX(_winSize.width/gameboard.contentSize.width, _winSize.height/gameboard.contentSize.height); //0.2345; // 320.0/1365.0  iPhone width/Board_Bar01 width.  Gets reset with setBounds.
@@ -83,8 +83,9 @@
 - (void)setMaxZoom:(float)maxZoom
 {
     if (maxZoom != _maxZoom) {
-        
+        [self willChangeValueForKey:@"maxZoom"];
         _maxZoom = MAX(maxZoom, _minZoom);
+        [self didChangeValueForKey:@"maxZoom"];
     }
 }
 
@@ -105,22 +106,115 @@
 
 - (CGPoint)positionInScreenCoords
 {
-    return _camPos;
+    return [self.worldNode convertToWorldSpace:_camPos];
 }
 
 - (CGPoint)positionInWorldCoords
 {
-    return [self.worldNode convertToWorldSpace:_camPos];
+    return _camPos;
+}
+
+- (void)setPositionInWorldCoords:(CGPoint)positionInWorldCoords
+{
+    // Clamps the position from being able to view outside of the world.
+    [self setPosition:positionInWorldCoords andZoom:_zoomScale];
 }
 
 - (float)zoomScale
 {
-    return _zoomLevel;
+    return _zoomScale;
 }
 
-- (CGRect)viewport
+- (void)setZoomScale:(CGFloat)z
+{
+    [self setPosition:_camPos andZoom:z];
+}
+
+- (CGRect)visibleWorldRect
 {
     return _viewBox;
+}
+
+- (void)setVisibleWorldRect:(CGRect)visibleWorldRect
+{
+    float targetZoom = [self _zoomForRect:visibleWorldRect];
+    CGPoint targetPos;
+    targetPos.x = CGRectGetMidX(visibleWorldRect);
+    targetPos.y = CGRectGetMidY(visibleWorldRect);
+    
+    [self setPosition:targetPos andZoom:targetZoom];  // will clamp and recalculate as necessary
+}
+
+#pragma mark - Helper Methods
+
+// to be called any time a new position value is set.
+- (void)setPosition:(CGPoint)position andZoom:(float)zoom
+{
+    BOOL recalculateViewBox = NO;
+    
+    float newZoom = MAX(zoom, _minZoom);  // prevents from zooming too far.
+    if (newZoom != _zoomScale) {
+        [self willChangeValueForKey:@"zoomScale"];
+        _zoomScale = newZoom;
+        recalculateViewBox = YES;
+        [self didChangeValueForKey:@"zoomScale"];
+    }
+    
+    // this works without zooming
+    CGPoint bottomLeftEdge = ccpMult(_halfWindowSize, 1.f/_zoomScale);
+    CGPoint topRightEdge = ccpSub(_farCorner, ccpMult(_halfWindowSize, 1.f/_zoomScale));
+    
+    CGPoint oldPos = _camPos;
+    
+    if (topRightEdge.x < bottomLeftEdge.x) {
+        topRightEdge.x = bottomLeftEdge.x;
+    }
+    if (topRightEdge.y < bottomLeftEdge.y) {
+        topRightEdge.y = bottomLeftEdge.y;
+    }
+    
+    CGPoint newPos = ccpClamp(position, bottomLeftEdge, topRightEdge);
+    
+    if (CGPointEqualToPoint(oldPos, newPos) == NO) {
+        [self willChangeValueForKey:@"positionInWorldCoords"];
+        _camPos = newPos;
+        recalculateViewBox = YES;
+        [self didChangeValueForKey:@"positionInWorldCoords"];
+    }
+    
+    if (recalculateViewBox) {
+        [self recalculateViewBox];
+    }
+}
+
+- (void)recalculateViewBox
+{
+    [self willChangeValueForKey:@"viewport"];
+    _viewBox.size.width = _winSize.width/_zoomScale;
+    _viewBox.size.height = _winSize.height/_zoomScale;
+    _viewBox.origin.x = _camPos.x - _viewBox.size.width/2;
+    _viewBox.origin.y = _camPos.y - _viewBox.size.height/2;
+    [self didChangeValueForKey:@"viewport"];
+}
+
+- (float)_zoomForRect:(CGRect)rect
+{
+    CGFloat newZoom;
+    
+    CGFloat winSizeAR = _winSize.width / _winSize.height;
+    CGFloat rectAR = rect.size.width / rect.size.height;
+    
+    // we know that screen coords correspond to camera zoom = 100%, that's why the math below should work.
+    if(rectAR > winSizeAR){
+        // then have to fit width
+        newZoom = _winSize.width/rect.size.width;
+    }
+    else{
+        // fit height
+        newZoom = _winSize.height/rect.size.height;
+    }
+    
+    return newZoom;
 }
 
 
@@ -205,60 +299,26 @@
 
 - (void)panZoomBy:(CGFloat)deltaZoom
 {
-    _zoomLevel += deltaZoom;
-    
-    [self setZoom:_zoomLevel];
-    
-    [self clampPositionOrZoom];
+    [self setZoomScale: self.zoomScale + deltaZoom];
 }
 
 - (void)panCameraInWorldBy:(CGPoint)deltaPos
 {
-    CGPoint diff = ccpMult(deltaPos, 1.0/_zoomLevel);  // deltaPos is in screen coords.  have to convert that to a board distance.
+    CGPoint diff = ccpMult(deltaPos, 1.0/_zoomScale);  // deltaPos is in screen coords.  have to convert that to a board distance.
     
     CGPoint newPt = ccpSub(_camPos, diff);
     
-    [self setCameraToBoardPos:newPt];  // doing it this way ensures the values are clamped appropriately.
+    [self setPositionInWorldCoords:newPt];  // doing it this way ensures the values are clamped appropriately.
 }
 
-
-#pragma mark - Public Methods
-
-/* step or update methods in CCAction subclasses */
-- (void)setCameraToBoardPos:(CGPoint)pos boundsTest:(BOOL)test;
-{
-    // Clamps the position from being able to view outside of the world.
-    _camPos = pos;
-    
-    if(test){
-        [self clampPositionOrZoom];   // basically you will always call this, unless you re-set the zoom and have already clamped.
-    }
-    
-    [self recalculateViewBox];
-    
-}
-
-- (void)setCameraToBoardPos:(CGPoint)pos
-{
-    [self setCameraToBoardPos:pos boundsTest: YES];
-}
-
-- (void)setZoom:(CGFloat)z
-{
-    // prevents from zooming out too much.  TODO - I assume I won't need a check in the y direction, but maybe?
-    _zoomLevel = z; // _zoomVar is local variance.  Slight changes in camera zoom.
-    [self clampPositionOrZoom];
-    
-    [self setCameraToBoardPos:_camPos boundsTest: NO];  // this should re-position the camera if zoomed out too far.  Will also re-calculate the viewBox.
-}
 
 #pragma mark - Update
 
 - (void)update:(CCTime)time
 {
-    CCLOG(@"Move To Pos: (%.1f, %.1f) at zoom: %.3f", _camPos.x, _camPos.y, _zoomLevel);
+    CCLOG(@"Move To Pos: (%.1f, %.1f) at zoom: %.3f", _camPos.x, _camPos.y, _zoomScale);
     
-    CGFloat scale = _zoomLevel;
+    CGFloat scale = _zoomScale;
     [self setScale:scale];
     
     if (_parallaxMode)
@@ -272,34 +332,6 @@
     
 }
 
-#pragma mark - Helper Methods
-
-// to be called any time a new position value is set.
-- (void)clampPositionOrZoom
-{
-    _zoomLevel = _zoomLevel <= _minZoom ? _minZoom : _zoomLevel;  // prevents from zooming too far.
-    
-    // this works without zooming
-    CGPoint bottomLeftEdge = ccpMult(_halfWindowSize, 1.f/_zoomLevel);
-    CGPoint topRightEdge = ccpSub(_farCorner, ccpMult(_halfWindowSize, 1.f/_zoomLevel));
-    
-    if (topRightEdge.x < bottomLeftEdge.x) {
-        topRightEdge.x = bottomLeftEdge.x;
-    }
-    if (topRightEdge.y < bottomLeftEdge.y) {
-        topRightEdge.y = bottomLeftEdge.y;
-    }
-    
-    _camPos = ccpClamp(_camPos, bottomLeftEdge, topRightEdge);
-}
-
-- (void)recalculateViewBox
-{
-    _viewBox.size.width = _winSize.width/_zoomLevel;
-    _viewBox.size.height = _winSize.height/_zoomLevel;
-    _viewBox.origin.x = _camPos.x - _viewBox.size.width/2;
-    _viewBox.origin.y = _camPos.y - _viewBox.size.height/2;
-}
 
 
 @end

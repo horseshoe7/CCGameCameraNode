@@ -39,6 +39,7 @@
 		DC0C8AF31A02E6F800754A9B /* Gameplay.m in Sources */ = {isa = PBXBuildFile; fileRef = DC0C8AF21A02E6F800754A9B /* Gameplay.m */; };
 		DC0C8AF71A02EAF700754A9B /* GameWorld.m in Sources */ = {isa = PBXBuildFile; fileRef = DC0C8AF61A02EAF700754A9B /* GameWorld.m */; };
 		DC0C8B151A05D24400754A9B /* CCGameCameraNode.m in Sources */ = {isa = PBXBuildFile; fileRef = DC0C8B141A05D24400754A9B /* CCGameCameraNode.m */; };
+		DC0C8B231A06D7A300754A9B /* CCGameCameraNode+GeometryHelpers.m in Sources */ = {isa = PBXBuildFile; fileRef = DC0C8B221A06D7A300754A9B /* CCGameCameraNode+GeometryHelpers.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -100,6 +101,8 @@
 		DC0C8B0F1A05691900754A9B /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		DC0C8B131A05D24400754A9B /* CCGameCameraNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCGameCameraNode.h; sourceTree = "<group>"; };
 		DC0C8B141A05D24400754A9B /* CCGameCameraNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCGameCameraNode.m; sourceTree = "<group>"; };
+		DC0C8B211A06D7A300754A9B /* CCGameCameraNode+GeometryHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CCGameCameraNode+GeometryHelpers.h"; sourceTree = "<group>"; };
+		DC0C8B221A06D7A300754A9B /* CCGameCameraNode+GeometryHelpers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CCGameCameraNode+GeometryHelpers.m"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -238,19 +241,13 @@
 		DC0C8B111A05D24400754A9B /* CCGameCameraNode */ = {
 			isa = PBXGroup;
 			children = (
-				DC0C8B121A05D24400754A9B /* CameraActions */,
 				DC0C8B131A05D24400754A9B /* CCGameCameraNode.h */,
 				DC0C8B141A05D24400754A9B /* CCGameCameraNode.m */,
+				DC0C8B211A06D7A300754A9B /* CCGameCameraNode+GeometryHelpers.h */,
+				DC0C8B221A06D7A300754A9B /* CCGameCameraNode+GeometryHelpers.m */,
 			);
 			name = CCGameCameraNode;
 			path = Source/CCGameCameraNode;
-			sourceTree = "<group>";
-		};
-		DC0C8B121A05D24400754A9B /* CameraActions */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = CameraActions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -379,6 +376,7 @@
 				DC0C8B151A05D24400754A9B /* CCGameCameraNode.m in Sources */,
 				B7378994180767190076A88C /* MainScene.m in Sources */,
 				B73789871807631A0076A88C /* main.m in Sources */,
+				DC0C8B231A06D7A300754A9B /* CCGameCameraNode+GeometryHelpers.m in Sources */,
 				DC0C8AF71A02EAF700754A9B /* GameWorld.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

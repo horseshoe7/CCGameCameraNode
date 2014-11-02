@@ -13,15 +13,20 @@ An attempt at a way to pan around your game world, which also allows zooming.  F
 
 Sometimes you may have a game world that needs to do more than a CCFollowNode action can offer.  Why?  Because often you would like have zooming on your map.  This CCGameCameraNode attempts to be a sort of "view manager" for your game world.
 
-# What can it currently do?
+# What Does the Project Currently Do?
 
 It loads a test scene and allows you to pan and pinch the screen to adjust the zoom.  For now, that's it.
 
+# Features
+
+* Adjust camera position and zoom.  Convenience method allows you to zoom to a specific rectangle on your board
+* Use CCActions on the camera.
+
+
 # Future Work
 
-* An API that allows you to programmatically interact with the camera
-* Adding actions
 * Allow for rotation
+
 
 # What this isn't for
 
