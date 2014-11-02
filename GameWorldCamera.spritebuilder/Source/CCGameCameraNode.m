@@ -13,7 +13,7 @@
     CGSize _winSize;
     CGPoint _farCorner;  // fixed
     
-    CGPoint _windowOrigin;
+    CGPoint _halfWindowSize;
     
     // user interaction
     CGPoint _lastLocation;
@@ -46,14 +46,12 @@
     if (self) {
         
         [self addChild:gameboard];
-        gameboard.anchorPoint = ccp(0.5f, 0.5f);
+        gameboard.anchorPoint = CGPointZero;
         _camPos = ccp(0.5f * gameboard.contentSize.width, 0.5f * gameboard.contentSize.height);
         _worldNode = gameboard;
         
         _winSize = [CCDirector sharedDirector].view.bounds.size;
-        _windowOrigin = ccp(_winSize.width * 0.5f, _winSize.height * 0.5f);
-//        _farCorner = ccp(MAX(0, gameboard.contentSize.width - _winSize.width),
-//                         MAX(0, gameboard.contentSize.height - _winSize.height));
+        _halfWindowSize = ccp(_winSize.width * 0.5f, _winSize.height * 0.5f);
         
         _farCorner = ccp(MAX(0, gameboard.contentSize.width),
                          MAX(0, gameboard.contentSize.height));
@@ -213,7 +211,7 @@
     CGFloat scale = _zoomLevel;
     [self setScale:scale];
     
-    self.worldNode.anchorPoint = ccp(_camPos.x / self.worldNode.contentSize.width, _camPos.y / self.worldNode.contentSize.height);
+    self.worldNode.position = ccpNeg(_camPos);
 }
 
 #pragma mark - Helper Methods
@@ -224,8 +222,8 @@
     _zoomLevel = _zoomLevel <= _minZoom ? _minZoom : _zoomLevel;  // prevents from zooming too far.
     
     // this works without zooming
-    CGPoint bottomLeftEdge = ccpMult(_windowOrigin, 1.f/_zoomLevel);
-    CGPoint topRightEdge = ccpSub(_farCorner, ccpMult(_windowOrigin, 1.f/_zoomLevel));
+    CGPoint bottomLeftEdge = ccpMult(_halfWindowSize, 1.f/_zoomLevel);
+    CGPoint topRightEdge = ccpSub(_farCorner, ccpMult(_halfWindowSize, 1.f/_zoomLevel));
     
     if (topRightEdge.x < bottomLeftEdge.x) {
         topRightEdge.x = bottomLeftEdge.x;

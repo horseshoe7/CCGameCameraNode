@@ -30,7 +30,6 @@
     CCLOG(@"Gameplay Loaded");
     
     _gameWorld = (GameWorld*)[CCBReader load:@"TestWorld"];
-
     
     CGSize winsize = [CCDirector sharedDirector].view.bounds.size;
     _camera = [[CCGameCameraNode alloc] initWithGameboard:_gameWorld];
