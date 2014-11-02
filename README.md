@@ -21,6 +21,7 @@ It loads a test scene and allows you to pan and pinch the screen to adjust the z
 
 * An API that allows you to programmatically interact with the camera
 * Adding actions
+* Allow for rotation
 
 # What this isn't for
 

@@ -29,10 +29,21 @@ ii) allow its contentSize to match your [CCDirector sharedDirector].viewSize
 @interface CCGameCameraNode : CCNode
 
 @property (nonatomic, readonly) float zoomLevel;
-@property (nonatomic, readonly) float minZoom;  // the furthest out it can go, so that gameboard
-@property (nonatomic, readonly) float maxZoom;
+@property (nonatomic, readonly) float minZoom;  // the furthest out it can go, so that world is visible
+@property (nonatomic, assign) float maxZoom; // default is 2.65
 
-- (instancetype)initWithGameboard:(CCNode*)gameboard;
+@property (nonatomic, readonly) CGPoint positionInScreenCoords;
+@property (nonatomic, readonly) CGPoint positionInWorldCoords;
+@property (nonatomic, readonly) CGFloat zoomScale;
+@property (nonatomic, readonly) CGRect viewport;  // the part of the world which is currently visible
+
+
+
+- (instancetype)initWithWorld:(CCNode*)world;
+
+#pragma mark - Direct Camera Control
+- (void)setCameraToBoardPos:(CGPoint)pos;
+- (void)setZoom:(CGFloat)z;
 
 
 @end

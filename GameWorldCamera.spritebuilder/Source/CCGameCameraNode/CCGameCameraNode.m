@@ -32,15 +32,18 @@
     
     // derived properties cache
     CGRect _viewBox;
+    
+    
 }
 
 @property (nonatomic, weak) CCNode *worldNode;
+@property (nonatomic, assign) BOOL parallaxMode;  // yes if your world contains parallax, NO if you want to rotate
 
 @end
 
 @implementation CCGameCameraNode
 
-- (instancetype)initWithGameboard:(CCNode*)gameboard
+- (instancetype)initWithWorld:(CCNode*)gameboard
 {
     self = [super init];
     if (self) {
@@ -64,6 +67,9 @@
         _maxZoom = 2.65;  // experimentally determined.
         _viewBox = CGRectZero; // 100% box.
         
+        self.parallaxMode = YES;
+        
+        
         UIPinchGestureRecognizer *pinchzoom = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(pinchZoom:)];
         [[CCDirector sharedDirector].view addGestureRecognizer:pinchzoom];
         
@@ -72,6 +78,50 @@
     return self;
 }
 
+#pragma mark - Accessors
+
+- (void)setMaxZoom:(float)maxZoom
+{
+    if (maxZoom != _maxZoom) {
+        
+        _maxZoom = MAX(maxZoom, _minZoom);
+    }
+}
+
+- (void)setParallaxMode:(BOOL)parallax
+{
+    if (parallax != _parallaxMode) {
+        _parallaxMode = parallax;
+        
+        if (parallax) {
+            self.worldNode.anchorPoint = CGPointZero;
+        }
+        else
+        {
+            self.worldNode.position = CGPointZero;
+        }
+    }
+}
+
+- (CGPoint)positionInScreenCoords
+{
+    return _camPos;
+}
+
+- (CGPoint)positionInWorldCoords
+{
+    return [self.worldNode convertToWorldSpace:_camPos];
+}
+
+- (float)zoomScale
+{
+    return _zoomLevel;
+}
+
+- (CGRect)viewport
+{
+    return _viewBox;
+}
 
 
 #pragma mark - User Interaction Handlers
@@ -151,7 +201,7 @@
     }
 }
 
-#pragma Pan and Zoom via UI
+#pragma mark - Pan and Zoom via UI
 
 - (void)panZoomBy:(CGFloat)deltaZoom
 {
@@ -172,7 +222,7 @@
 }
 
 
-#pragma mark step:/update: Methods
+#pragma mark - Public Methods
 
 /* step or update methods in CCAction subclasses */
 - (void)setCameraToBoardPos:(CGPoint)pos boundsTest:(BOOL)test;
@@ -211,7 +261,15 @@
     CGFloat scale = _zoomLevel;
     [self setScale:scale];
     
-    self.worldNode.position = ccpNeg(_camPos);
+    if (_parallaxMode)
+    {
+        self.worldNode.position = ccpNeg(_camPos);
+    }
+    else
+    {
+        self.worldNode.anchorPoint = ccp(_camPos.x / _farCorner.x, _camPos.y / _farCorner.y);
+    }
+    
 }
 
 #pragma mark - Helper Methods
