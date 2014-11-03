@@ -71,27 +71,45 @@
     CCLOG(@"move to topRight");
     
     CGRect targetRect = CGRectMake(900, 900, 100, 150);
-    CCActionInterval *action = [self.camera actionToMoveToRect:targetRect duration:2];
-    //self.camera.visibleWorldRect = targetRect;
     
-//    CGPoint targetPos = ccp(900, 900);
-//    CCActionInterval *action = [self.camera actionToMoveToPosition:targetPos duration:2];
+    BOOL animated = YES;
+    
+    if (animated)
+    {
+        CCActionInterval *action = [self.camera actionToMoveToRect:targetRect duration:2];
 
-    [self.camera runAction:action];
-    
+        // add easing to the action
+        CCAction *ease = [CCActionEaseSineInOut actionWithAction:action];
+        [self.camera runAction:ease];
+
+    }
+    else
+    {
+        self.camera.visibleWorldRect = targetRect;  // set instantly instead
+    }
 }
 
 - (void)moveToBottomLeft
 {
     CCLOG(@"move to bottomLeft");
+    
     CGRect targetRect = CGRectMake(0, 0, 568, 320);
-    CCActionInterval *action = [self.camera actionToMoveToRect:targetRect duration:2];
-    //self.camera.visibleWorldRect = targetRect;
-
-//    CGPoint targetPos = ccp(0, 0);
-//    CCActionInterval *action = [self.camera actionToMoveToPosition:targetPos duration:2];
-
-    [self.camera runAction:action];
+    
+    BOOL animated = YES;
+    
+    if (animated)
+    {
+        CCActionInterval *action = [self.camera actionToMoveToRect:targetRect duration:2];
+        
+        // add easing to the action
+        CCAction *ease = [CCActionEaseSineInOut actionWithAction:action];
+        [self.camera runAction:ease];
+        
+    }
+    else
+    {
+        self.camera.visibleWorldRect = targetRect;  // set instantly instead
+    }
 }
 
 @end
