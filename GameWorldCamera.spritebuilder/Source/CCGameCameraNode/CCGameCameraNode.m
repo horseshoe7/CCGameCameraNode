@@ -26,7 +26,7 @@
     CGPoint _camPos;
     float _zoomScale;
     
-    // Modifiers added independently of camPos or zoomLevel
+    // Modifiers added independently of camPos or zoomLevel.  Not used currently, but can be used to add 'drunk cameraman'
     float _zoomVariance;
     CGPoint _positionVariance;
     
@@ -40,7 +40,7 @@
 }
 
 @property (nonatomic, weak) CCNode *worldNode;
-@property (nonatomic, assign) BOOL parallaxMode;  // yes if your world contains parallax, NO if you want to rotate
+@property (nonatomic, assign) BOOL parallaxMode;  // yes if your world contains parallax, NO if you want to (one day) allow rotate
 
 @end
 
@@ -66,8 +66,8 @@
         _zoomScale = 1.0;  // 100%, default value
         _zoomVariance = 0.0;
         _positionVariance = CGPointZero;
-        _minZoom = MAX(_winSize.width/gameboard.contentSize.width, _winSize.height/gameboard.contentSize.height); //0.2345; // 320.0/1365.0  iPhone width/Board_Bar01 width.  Gets reset with setBounds.
-        _maxZoom = 2.65;  // experimentally determined.
+        _minZoom = MAX(_winSize.width/gameboard.contentSize.width, _winSize.height/gameboard.contentSize.height);
+        _maxZoom = 2.65;
         _viewBox = CGRectZero; // 100% box.
         
         self.parallaxMode = YES;
@@ -324,7 +324,7 @@
     
     CGPoint newPt = ccpSub(_camPos, diff);
     
-    [self setPositionInWorldCoords:newPt];  // doing it this way ensures the values are clamped appropriately.
+    [self setPositionInWorldCoords:newPt]; 
 }
 
 

@@ -35,7 +35,7 @@
     _gameWorld = (GameWorld*)[CCBReader load:@"TestWorld"];
     
     CGSize winsize = [CCDirector sharedDirector].view.bounds.size;
-    _camera = [[CCGameCameraNode alloc] initWithWorld:_gameWorld];
+    _camera = [[CCGameCameraNode alloc] initWithWorld:_gameWorld];  // gameWorld gets added to the camera node
     _camera.position = ccp(0.5f * winsize.width , 0.5f * winsize.height);
     
     [_worldContainer addChild:_camera];
