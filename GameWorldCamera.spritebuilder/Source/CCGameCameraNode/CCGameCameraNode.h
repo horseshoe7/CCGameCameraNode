@@ -39,4 +39,11 @@ ii) allow its contentSize to match your [CCDirector sharedDirector].viewSize
 
 - (instancetype)initWithWorld:(CCNode*)world;
 
+#pragma mark - Actions
+
+- (CCActionInterval*)actionToMoveToPosition:(CGPoint)point duration:(CCTime)duration;
+- (CCActionInterval*)actionToMoveToZoom:(float)zoom duration:(CCTime)duration;
+- (CCActionInterval*)actionToMoveToPosition:(CGPoint)point zoom:(float)zoom duration:(CCTime)duration;
+- (CCActionInterval*)actionToMoveToRect:(CGRect)rect duration:(CCTime)duration;
+
 @end

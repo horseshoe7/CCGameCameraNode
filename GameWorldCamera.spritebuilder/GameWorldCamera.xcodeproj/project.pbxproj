@@ -40,6 +40,8 @@
 		DC0C8AF71A02EAF700754A9B /* GameWorld.m in Sources */ = {isa = PBXBuildFile; fileRef = DC0C8AF61A02EAF700754A9B /* GameWorld.m */; };
 		DC0C8B151A05D24400754A9B /* CCGameCameraNode.m in Sources */ = {isa = PBXBuildFile; fileRef = DC0C8B141A05D24400754A9B /* CCGameCameraNode.m */; };
 		DC0C8B231A06D7A300754A9B /* CCGameCameraNode+GeometryHelpers.m in Sources */ = {isa = PBXBuildFile; fileRef = DC0C8B221A06D7A300754A9B /* CCGameCameraNode+GeometryHelpers.m */; };
+		DC0C8B2C1A06E42F00754A9B /* CCActionTweenPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = DC0C8B2B1A06E42F00754A9B /* CCActionTweenPoint.m */; };
+		DC0C8B2F1A06E44B00754A9B /* CCActionTweenRect.m in Sources */ = {isa = PBXBuildFile; fileRef = DC0C8B2E1A06E44B00754A9B /* CCActionTweenRect.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -103,6 +105,10 @@
 		DC0C8B141A05D24400754A9B /* CCGameCameraNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCGameCameraNode.m; sourceTree = "<group>"; };
 		DC0C8B211A06D7A300754A9B /* CCGameCameraNode+GeometryHelpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "CCGameCameraNode+GeometryHelpers.h"; sourceTree = "<group>"; };
 		DC0C8B221A06D7A300754A9B /* CCGameCameraNode+GeometryHelpers.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "CCGameCameraNode+GeometryHelpers.m"; sourceTree = "<group>"; };
+		DC0C8B2A1A06E42F00754A9B /* CCActionTweenPoint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCActionTweenPoint.h; sourceTree = "<group>"; };
+		DC0C8B2B1A06E42F00754A9B /* CCActionTweenPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCActionTweenPoint.m; sourceTree = "<group>"; };
+		DC0C8B2D1A06E44B00754A9B /* CCActionTweenRect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCActionTweenRect.h; sourceTree = "<group>"; };
+		DC0C8B2E1A06E44B00754A9B /* CCActionTweenRect.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCActionTweenRect.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -245,9 +251,21 @@
 				DC0C8B141A05D24400754A9B /* CCGameCameraNode.m */,
 				DC0C8B211A06D7A300754A9B /* CCGameCameraNode+GeometryHelpers.h */,
 				DC0C8B221A06D7A300754A9B /* CCGameCameraNode+GeometryHelpers.m */,
+				DC0C8B281A06E3F600754A9B /* CCActionSupport */,
 			);
 			name = CCGameCameraNode;
 			path = Source/CCGameCameraNode;
+			sourceTree = "<group>";
+		};
+		DC0C8B281A06E3F600754A9B /* CCActionSupport */ = {
+			isa = PBXGroup;
+			children = (
+				DC0C8B2A1A06E42F00754A9B /* CCActionTweenPoint.h */,
+				DC0C8B2B1A06E42F00754A9B /* CCActionTweenPoint.m */,
+				DC0C8B2D1A06E44B00754A9B /* CCActionTweenRect.h */,
+				DC0C8B2E1A06E44B00754A9B /* CCActionTweenRect.m */,
+			);
+			path = CCActionSupport;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -371,8 +389,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				DC0C8B2C1A06E42F00754A9B /* CCActionTweenPoint.m in Sources */,
 				B737893F1807617C0076A88C /* AppDelegate.m in Sources */,
 				DC0C8AF31A02E6F800754A9B /* Gameplay.m in Sources */,
+				DC0C8B2F1A06E44B00754A9B /* CCActionTweenRect.m in Sources */,
 				DC0C8B151A05D24400754A9B /* CCGameCameraNode.m in Sources */,
 				B7378994180767190076A88C /* MainScene.m in Sources */,
 				B73789871807631A0076A88C /* main.m in Sources */,

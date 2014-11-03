@@ -26,6 +26,7 @@ It loads a test scene and allows you to pan and pinch the screen to adjust the z
 # Future Work
 
 * Allow for rotation
+* Actions where you can animate/tween CGRect and CGPoint properties
 
 
 # What this isn't for

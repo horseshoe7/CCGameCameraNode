@@ -21,6 +21,9 @@
     CCGameCameraNode *_camera;
     
     GameWorld *_gameWorld;
+    
+    CCNode *_hudContainer;
+    CCNode *_worldContainer;
 }
 
 - (void)didLoadFromCCB {
@@ -35,7 +38,9 @@
     _camera = [[CCGameCameraNode alloc] initWithWorld:_gameWorld];
     _camera.position = ccp(0.5f * winsize.width , 0.5f * winsize.height);
     
-    [self addChild:_camera];
+    [_worldContainer addChild:_camera];
+    
+    self.camera.positionInWorldCoords = CGPointZero;
     
 }
 
@@ -59,5 +64,34 @@
     [self.camera touchCancelled:touch withEvent:event];
 }
 
+#pragma mark - Actions
+
+- (void)moveToTopRight
+{
+    CCLOG(@"move to topRight");
+    
+    CGRect targetRect = CGRectMake(900, 900, 100, 150);
+    CCActionInterval *action = [self.camera actionToMoveToRect:targetRect duration:2];
+    //self.camera.visibleWorldRect = targetRect;
+    
+//    CGPoint targetPos = ccp(900, 900);
+//    CCActionInterval *action = [self.camera actionToMoveToPosition:targetPos duration:2];
+
+    [self.camera runAction:action];
+    
+}
+
+- (void)moveToBottomLeft
+{
+    CCLOG(@"move to bottomLeft");
+    CGRect targetRect = CGRectMake(0, 0, 568, 320);
+    CCActionInterval *action = [self.camera actionToMoveToRect:targetRect duration:2];
+    //self.camera.visibleWorldRect = targetRect;
+
+//    CGPoint targetPos = ccp(0, 0);
+//    CCActionInterval *action = [self.camera actionToMoveToPosition:targetPos duration:2];
+
+    [self.camera runAction:action];
+}
 
 @end

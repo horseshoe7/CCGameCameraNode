@@ -7,6 +7,9 @@
 //
 
 #import "CCGameCameraNode.h"
+#import "CCGameCameraNode+GeometryHelpers.h"
+#import "CCActionTweenPoint.h"
+#import "CCActionTweenRect.h"
 
 @interface CCGameCameraNode()
 {
@@ -147,24 +150,20 @@
 
 #pragma mark - Helper Methods
 
-// to be called any time a new position value is set.
-- (void)setPosition:(CGPoint)position andZoom:(float)zoom
+- (void)clampPosition:(CGPoint*)positionPtr andZoom:(float*)zoomPtr
 {
-    BOOL recalculateViewBox = NO;
-    
-    float newZoom = MAX(zoom, _minZoom);  // prevents from zooming too far.
-    if (newZoom != _zoomScale) {
-        [self willChangeValueForKey:@"zoomScale"];
-        _zoomScale = newZoom;
-        recalculateViewBox = YES;
-        [self didChangeValueForKey:@"zoomScale"];
+    if (positionPtr == NULL || zoomPtr == NULL) {
+        return;
     }
     
-    // this works without zooming
-    CGPoint bottomLeftEdge = ccpMult(_halfWindowSize, 1.f/_zoomScale);
-    CGPoint topRightEdge = ccpSub(_farCorner, ccpMult(_halfWindowSize, 1.f/_zoomScale));
+    CGPoint position = *positionPtr;
+    float zoom = *zoomPtr;
     
-    CGPoint oldPos = _camPos;
+    float newZoom = MAX(zoom, _minZoom);  // prevents from zooming too far.
+    *zoomPtr = newZoom;
+    
+    CGPoint bottomLeftEdge = ccpMult(_halfWindowSize, 1.f/newZoom);
+    CGPoint topRightEdge = ccpSub(_farCorner, ccpMult(_halfWindowSize, 1.f/newZoom));
     
     if (topRightEdge.x < bottomLeftEdge.x) {
         topRightEdge.x = bottomLeftEdge.x;
@@ -174,8 +173,27 @@
     }
     
     CGPoint newPos = ccpClamp(position, bottomLeftEdge, topRightEdge);
+    *positionPtr = newPos;
+}
+
+// to be called any time a new position value is set.
+- (void)setPosition:(CGPoint)position andZoom:(float)zoom
+{
+    BOOL recalculateViewBox = NO;
     
-    if (CGPointEqualToPoint(oldPos, newPos) == NO) {
+    CGPoint newPos = position;
+    float newZoom = zoom;
+    
+    [self clampPosition:&newPos andZoom:&newZoom];
+    
+    if (newZoom != _zoomScale) {
+        [self willChangeValueForKey:@"zoomScale"];
+        _zoomScale = newZoom;
+        recalculateViewBox = YES;
+        [self didChangeValueForKey:@"zoomScale"];
+    }
+    
+    if (CGPointEqualToPoint(_camPos, newPos) == NO) {
         [self willChangeValueForKey:@"positionInWorldCoords"];
         _camPos = newPos;
         recalculateViewBox = YES;
@@ -189,12 +207,12 @@
 
 - (void)recalculateViewBox
 {
-    [self willChangeValueForKey:@"viewport"];
+    [self willChangeValueForKey:@"visibleWorldRect"];
     _viewBox.size.width = _winSize.width/_zoomScale;
     _viewBox.size.height = _winSize.height/_zoomScale;
     _viewBox.origin.x = _camPos.x - _viewBox.size.width/2;
     _viewBox.origin.y = _camPos.y - _viewBox.size.height/2;
-    [self didChangeValueForKey:@"viewport"];
+    [self didChangeValueForKey:@"visibleWorldRect"];
 }
 
 - (float)_zoomForRect:(CGRect)rect
@@ -222,8 +240,6 @@
 
 - (void)pinchZoom:(UIPinchGestureRecognizer*)pinch
 {
-    NSLog(@"Pinching!");
-    
     if (pinch.state == UIGestureRecognizerStateBegan) {
         _lastScale = pinch.scale;
     }
@@ -316,7 +332,7 @@
 
 - (void)update:(CCTime)time
 {
-    CCLOG(@"Move To Pos: (%.1f, %.1f) at zoom: %.3f", _camPos.x, _camPos.y, _zoomScale);
+    //CCLOG(@"Move To Pos: (%.1f, %.1f) at zoom: %.3f", _camPos.x, _camPos.y, _zoomScale);
     
     CGFloat scale = _zoomScale;
     [self setScale:scale];
@@ -332,6 +348,78 @@
     
 }
 
+#pragma mark -
+#pragma mark - Actions
+
+- (void)stopAllUnwantedActions
+{
+    [self stopAllActions];
+}
+
+- (CCActionInterval*)actionToMoveToPosition:(CGPoint)point duration:(CCTime)duration
+{
+    CGPoint newPos = point;
+    float newZoom = self.zoomScale;
+    
+    [self clampPosition:&newPos andZoom:&newZoom];
+    
+    CCActionTweenPoint *movePosition = [CCActionTweenPoint actionWithDuration:duration
+                                                                          key:@"positionInWorldCoords"
+                                                                    fromPoint:self.positionInWorldCoords
+                                                                      toPoint:newPos];
+    
+    return movePosition;
+}
+
+- (CCActionInterval*)actionToMoveToZoom:(float)zoom duration:(CCTime)duration
+{
+    CCActionTween *moveZoom = [CCActionTween actionWithDuration:duration
+                                                            key:@"zoomScale"
+                                                           from:self.zoomScale
+                                                             to:zoom];
+    return moveZoom;
+}
+
+- (CCActionInterval*)actionToMoveToPosition:(CGPoint)point zoom:(float)zoom duration:(CCTime)duration
+{
+    // figure out what rect would be
+    CGPoint newPos = point;
+    float newZoom = zoom;
+    
+    [self clampPosition:&newPos andZoom:&newZoom];
+    
+    CGRect targetRect;
+    targetRect.size.width = _winSize.width/newZoom;
+    targetRect.size.height = _winSize.height/newZoom;
+    targetRect.origin.x = newPos.x - targetRect.size.width/2;
+    targetRect.origin.y = newPos.y - targetRect.size.height/2;
+    
+    CCActionTweenRect *moveRect = [CCActionTweenRect actionWithDuration:duration
+                                                                    key:@"visibleWorldRect"
+                                                               fromRect:self.visibleWorldRect
+                                                                 toRect:targetRect];
+    return moveRect;
+}
+
+- (CCActionInterval*)actionToMoveToRect:(CGRect)targetRect duration:(CCTime)duration
+{
+    CGPoint newPos = [self centerOfRect:targetRect];
+    float newZoom = [self zoomForRect:targetRect];
+    
+    [self clampPosition:&newPos andZoom:&newZoom];
+    
+    targetRect.size.width = _winSize.width/newZoom;
+    targetRect.size.height = _winSize.height/newZoom;
+    targetRect.origin.x = newPos.x - targetRect.size.width/2;
+    targetRect.origin.y = newPos.y - targetRect.size.height/2;
+    
+    CCActionTweenRect *moveRect = [CCActionTweenRect actionWithDuration:duration
+                                                                    key:@"visibleWorldRect"
+                                                               fromRect:self.visibleWorldRect
+                                                                 toRect:targetRect];
+
+    return moveRect;
+}
 
 
 @end
