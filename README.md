@@ -15,7 +15,7 @@ Sometimes you may have a game world that needs to do more than a CCFollowNode ac
 
 # What Does the Project Currently Do?
 
-It loads a test scene and allows you to pan and pinch the screen to adjust the zoom.  For now, that's it.
+It loads a test scene and allows you to pan and pinch the screen to adjust the zoom.  There are two buttons to show off the camera animation feature of the camera.  T-R for top right, B-L for bottom left.  Have a look at these action handlers for an example of how to best use it.
 
 # Features
 
@@ -26,7 +26,6 @@ It loads a test scene and allows you to pan and pinch the screen to adjust the z
 # Future Work
 
 * Allow for rotation
-* Actions where you can animate/tween CGRect and CGPoint properties
 
 
 # What this isn't for
