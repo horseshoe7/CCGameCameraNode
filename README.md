@@ -22,11 +22,17 @@ It loads a test scene and allows you to pan and pinch the screen to adjust the z
 * Adjust camera position and zoom.  Convenience method allows you to zoom to a specific rectangle on your board
 * Use CCActions on the camera.
 
+# Notes
+
+If you are using a CCPhysicsNode in your scene, make sure it is a child of the node you provide to the camera, otherwise asserts will fire when you try to zoom with the camera.
 
 # Future Work
 
 * Allow for rotation
 
+# Known Issues
+
+* I'm still familiarizing myself with Cocos2D and contentSizeType and so on.  This worked fine on iPhone, but I had troubles with world boundaries for some reason on iPad.  If someone knows the answer given this project, please let me know!!
 
 # What this isn't for
 
