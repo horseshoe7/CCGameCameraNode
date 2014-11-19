@@ -128,7 +128,7 @@
     return _zoomScale;
 }
 
-- (void)setZoomScale:(CGFloat)z
+- (void)setZoomScale:(float)z
 {
     [self setPosition:_camPos andZoom:z];
 }
@@ -262,7 +262,7 @@
 }
 
 
-- (void)touchBegan:(UITouch *)touch withEvent:(UIEvent *)event
+- (void)touchBegan:(CCTouch *)touch withEvent:(CCTouchEvent *)event
 {
     if (event.allTouches.count > 1) {
         return;  // probably a pinch gesture, handled elsewhere!
@@ -274,7 +274,7 @@
     _lastLocation = [touch locationInWorld];
 }
 
-- (void)touchMoved:(UITouch *)touch withEvent:(UIEvent *)event
+- (void)touchMoved:(CCTouch *)touch withEvent:(CCTouchEvent *)event
 {
     if (event.allTouches.count > 1) {
         return;  // probably a pinch gesture, handled elsewhere!
@@ -291,7 +291,7 @@
     _lastLocation = location;
 }
 
-- (void)touchEnded:(UITouch *)touch withEvent:(UIEvent *)event
+- (void)touchEnded:(CCTouch *)touch withEvent:(CCTouchEvent *)event
 {
     if (event.allTouches.count > 1) {
         return;  // probably a pinch gesture, handled elsewhere!
@@ -301,7 +301,7 @@
     }
 }
 
-- (void)touchCancelled:(UITouch *)touch withEvent:(UIEvent *)event
+- (void)touchCancelled:(CCTouch *)touch withEvent:(CCTouchEvent *)event
 {
     if (event.allTouches.count > 1) {
         return;  // probably a pinch gesture, handled elsewhere!

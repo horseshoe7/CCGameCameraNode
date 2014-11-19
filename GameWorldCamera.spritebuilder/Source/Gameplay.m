@@ -44,22 +44,22 @@
     
 }
 
-- (void)touchBegan:(UITouch *)touch withEvent:(UIEvent *)event
+- (void)touchBegan:(CCTouch *)touch withEvent:(CCTouchEvent *)event
 {
     // implemented like this because you may want to have conditions where a touch should not pan the camera, like if you are using your finger to grab an object in your world.
     [self.camera touchBegan:touch withEvent:event];
 }
-- (void)touchMoved:(UITouch *)touch withEvent:(UIEvent *)event
+- (void)touchMoved:(CCTouch *)touch withEvent:(CCTouchEvent *)event
 {
     [self.camera touchMoved:touch withEvent:event];
 }
 
-- (void)touchEnded:(UITouch *)touch withEvent:(UIEvent *)event
+- (void)touchEnded:(CCTouch *)touch withEvent:(CCTouchEvent *)event
 {
     [self.camera touchEnded:touch withEvent:event];
 }
 
-- (void)touchCancelled:(UITouch *)touch withEvent:(UIEvent *)event
+- (void)touchCancelled:(CCTouch *)touch withEvent:(CCTouchEvent *)event
 {
     [self.camera touchCancelled:touch withEvent:event];
 }
