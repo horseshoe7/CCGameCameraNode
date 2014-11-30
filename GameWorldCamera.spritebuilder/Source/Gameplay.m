@@ -76,7 +76,7 @@
     
     if (animated)
     {
-        CCActionInterval *action = [self.camera actionToMoveToRect:targetRect duration:2];
+        CCActionInterval *action = [self.camera actionToMoveToRect:targetRect duration:2 completion:nil];
 
         // add easing to the action
         CCAction *ease = [CCActionEaseSineInOut actionWithAction:action];
@@ -99,7 +99,7 @@
     
     if (animated)
     {
-        CCActionInterval *action = [self.camera actionToMoveToRect:targetRect duration:2];
+        CCActionInterval *action = [self.camera actionToMoveToRect:targetRect duration:2 completion:nil];
         
         // add easing to the action
         CCAction *ease = [CCActionEaseSineInOut actionWithAction:action];

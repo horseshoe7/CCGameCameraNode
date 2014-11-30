@@ -356,7 +356,57 @@
     [self stopAllActions];
 }
 
+- (CCActionInterval*)easedActionUsingClass:(Class)easingClass action:(CCActionInterval*)action
+{
+    if (easingClass != Nil) {
+        NSAssert([easingClass isSubclassOfClass:[CCActionEase class]], @"You can only ease with known subclasses of CCActionEase");
+        
+        return [easingClass actionWithAction:action];
+    }
+
+    if (!self.defaultEasingClassName) {
+        return action;
+    }
+    
+    Class defaultEasingClass = NSClassFromString(self.defaultEasingClassName);
+    NSAssert([defaultEasingClass isSubclassOfClass:[CCActionEase class]], @"You can only ease with known subclasses of CCActionEase");
+    
+    return [defaultEasingClass actionWithAction:action];
+        
+}
+
+- (CCActionInterval*)addCallbackIfNecessaryWithAction:(CCActionInterval*)easedAction
+                                           completion:(void(^)(CCGameCameraNode *camera))completion
+{
+    if (!completion) {
+        return easedAction;
+    }
+    __weak CCGameCameraNode *weakself = self;
+    CCActionCallBlock *callback = [CCActionCallBlock actionWithBlock:^{
+        completion(weakself);
+    }];
+    
+    CCActionSequence *sequence = [CCActionSequence actionOne:easedAction two:callback];
+    
+    return sequence;
+}
+
 - (CCActionInterval*)actionToMoveToPosition:(CGPoint)point duration:(CCTime)duration
+{
+    return [self actionToMoveToPosition:point duration:duration completion:nil];
+}
+
+- (CCActionInterval*)actionToMoveToPosition:(CGPoint)point
+                                   duration:(CCTime)duration
+                                 completion:(void(^)(CCGameCameraNode *camera))completion
+{
+    return [self actionToMoveToPosition:point duration:duration easing:Nil completion:completion];
+}
+
+- (CCActionInterval*)actionToMoveToPosition:(CGPoint)point
+                                   duration:(CCTime)duration
+                                     easing:(__unsafe_unretained Class)easingClass
+                                 completion:(void(^)(CCGameCameraNode *camera))completion
 {
     CGPoint newPos = point;
     float newZoom = self.zoomScale;
@@ -368,19 +418,58 @@
                                                                     fromPoint:self.positionInWorldCoords
                                                                       toPoint:newPos];
     
-    return movePosition;
+    CCActionInterval *easedAction = [self easedActionUsingClass:easingClass action:movePosition];
+    
+    return [self addCallbackIfNecessaryWithAction:easedAction completion:completion];
 }
 
 - (CCActionInterval*)actionToMoveToZoom:(float)zoom duration:(CCTime)duration
+{
+    return [self actionToMoveToZoom:zoom duration:duration completion:nil];
+}
+
+- (CCActionInterval*)actionToMoveToZoom:(float)zoom
+                               duration:(CCTime)duration
+                             completion:(void(^)(CCGameCameraNode *camera))completion
+{
+    return [self actionToMoveToZoom:zoom duration:duration easing:Nil completion:completion];
+}
+
+- (CCActionInterval*)actionToMoveToZoom:(float)zoom
+                               duration:(CCTime)duration
+                                 easing:(__unsafe_unretained Class)easingClass
+                             completion:(void(^)(CCGameCameraNode *camera))completion
 {
     CCActionTween *moveZoom = [CCActionTween actionWithDuration:duration
                                                             key:@"zoomScale"
                                                            from:self.zoomScale
                                                              to:zoom];
-    return moveZoom;
+    
+    CCActionInterval *easedAction = [self easedActionUsingClass:easingClass action:moveZoom];
+    
+    return [self addCallbackIfNecessaryWithAction:easedAction completion:completion];
 }
 
-- (CCActionInterval*)actionToMoveToPosition:(CGPoint)point zoom:(float)zoom duration:(CCTime)duration
+- (CCActionInterval*)actionToMoveToPosition:(CGPoint)point
+                                       zoom:(float)zoom
+                                   duration:(CCTime)duration
+{
+    return [self actionToMoveToPosition:point zoom:zoom duration:duration completion:nil];
+}
+
+- (CCActionInterval*)actionToMoveToPosition:(CGPoint)point
+                                       zoom:(float)zoom
+                                   duration:(CCTime)duration
+                                 completion:(void (^)(CCGameCameraNode *))completion
+{
+    return [self actionToMoveToPosition:point zoom:zoom duration:duration easing:Nil completion:completion];
+}
+
+- (CCActionInterval*)actionToMoveToPosition:(CGPoint)point
+                                       zoom:(float)zoom
+                                   duration:(CCTime)duration
+                                     easing:(__unsafe_unretained Class)easingClass
+                                 completion:(void (^)(CCGameCameraNode *))completion
 {
     // figure out what rect would be
     CGPoint newPos = point;
@@ -398,10 +487,28 @@
                                                                     key:@"visibleWorldRect"
                                                                fromRect:self.visibleWorldRect
                                                                  toRect:targetRect];
-    return moveRect;
+    
+    CCActionInterval *easedAction = [self easedActionUsingClass:easingClass action:moveRect];
+    
+    return [self addCallbackIfNecessaryWithAction:easedAction completion:completion];
 }
 
 - (CCActionInterval*)actionToMoveToRect:(CGRect)targetRect duration:(CCTime)duration
+{
+    return [self actionToMoveToRect:targetRect duration:duration completion:nil];
+}
+
+- (CCActionInterval*)actionToMoveToRect:(CGRect)targetRect
+                               duration:(CCTime)duration
+                             completion:(void (^)(CCGameCameraNode *))completion
+{
+    return [self actionToMoveToRect:targetRect duration:duration easing:Nil completion:completion];
+}
+
+- (CCActionInterval*)actionToMoveToRect:(CGRect)targetRect
+                               duration:(CCTime)duration
+                                 easing:(__unsafe_unretained Class)easingClass
+                             completion:(void (^)(CCGameCameraNode *))completion
 {
     CGPoint newPos = [self centerOfRect:targetRect];
     float newZoom = [self zoomForRect:targetRect];
@@ -418,7 +525,9 @@
                                                                fromRect:self.visibleWorldRect
                                                                  toRect:targetRect];
 
-    return moveRect;
+    CCActionInterval *easedAction = [self easedActionUsingClass:easingClass action:moveRect];
+    
+    return [self addCallbackIfNecessaryWithAction:easedAction completion:completion];
 }
 
 
