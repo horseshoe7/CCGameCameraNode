@@ -17,5 +17,4 @@
 - (float)zoomForHeight:(CGFloat)h;
 - (float)zoomForWidth:(CGFloat)w;
 
-
 @end

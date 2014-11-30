@@ -42,6 +42,7 @@
 		DC0C8B231A06D7A300754A9B /* CCGameCameraNode+GeometryHelpers.m in Sources */ = {isa = PBXBuildFile; fileRef = DC0C8B221A06D7A300754A9B /* CCGameCameraNode+GeometryHelpers.m */; };
 		DC0C8B2C1A06E42F00754A9B /* CCActionTweenPoint.m in Sources */ = {isa = PBXBuildFile; fileRef = DC0C8B2B1A06E42F00754A9B /* CCActionTweenPoint.m */; };
 		DC0C8B2F1A06E44B00754A9B /* CCActionTweenRect.m in Sources */ = {isa = PBXBuildFile; fileRef = DC0C8B2E1A06E44B00754A9B /* CCActionTweenRect.m */; };
+		DCB975DF1A2BBECE002A4239 /* CCCameraFollowNodeAction.m in Sources */ = {isa = PBXBuildFile; fileRef = DCB975DE1A2BBECE002A4239 /* CCCameraFollowNodeAction.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -130,6 +131,8 @@
 		DC0C8B2B1A06E42F00754A9B /* CCActionTweenPoint.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCActionTweenPoint.m; sourceTree = "<group>"; };
 		DC0C8B2D1A06E44B00754A9B /* CCActionTweenRect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCActionTweenRect.h; sourceTree = "<group>"; };
 		DC0C8B2E1A06E44B00754A9B /* CCActionTweenRect.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCActionTweenRect.m; sourceTree = "<group>"; };
+		DCB975DD1A2BBECE002A4239 /* CCCameraFollowNodeAction.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CCCameraFollowNodeAction.h; sourceTree = "<group>"; };
+		DCB975DE1A2BBECE002A4239 /* CCCameraFollowNodeAction.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CCCameraFollowNodeAction.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -288,6 +291,8 @@
 				DC0C8B2B1A06E42F00754A9B /* CCActionTweenPoint.m */,
 				DC0C8B2D1A06E44B00754A9B /* CCActionTweenRect.h */,
 				DC0C8B2E1A06E44B00754A9B /* CCActionTweenRect.m */,
+				DCB975DD1A2BBECE002A4239 /* CCCameraFollowNodeAction.h */,
+				DCB975DE1A2BBECE002A4239 /* CCCameraFollowNodeAction.m */,
 			);
 			path = CCActionSupport;
 			sourceTree = "<group>";
@@ -443,6 +448,7 @@
 				B73789871807631A0076A88C /* main.m in Sources */,
 				DC0C8B231A06D7A300754A9B /* CCGameCameraNode+GeometryHelpers.m in Sources */,
 				DC0C8AF71A02EAF700754A9B /* GameWorld.m in Sources */,
+				DCB975DF1A2BBECE002A4239 /* CCCameraFollowNodeAction.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
