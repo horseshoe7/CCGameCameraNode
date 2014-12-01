@@ -21,7 +21,7 @@
  *  Creates an initializes a tween action.
  *
  *  @param aDuration Action duration.
- *  @param key       Property key to modify.
+ *  @param key       Property key with a CGPoint value to modify.
  *  @param from      Value to tween from.
  *  @param to        Value to tween to.
  *
@@ -33,7 +33,7 @@
  *  Initializes an initializes a tween action.
  *
  *  @param aDuration Action duration.
- *  @param key       Property key to modify.
+ *  @param key       Property key with a CGPoint value to modify.
  *  @param from      Value to tween from.
  *  @param to        Value to tween to.
  *

@@ -36,6 +36,9 @@
     
     CGSize winsize = [CCDirector sharedDirector].view.bounds.size;
     _camera = [[CCGameCameraNode alloc] initWithWorld:_gameWorld];  // gameWorld gets added to the camera node
+    
+    _camera.defaultEasingClassName = @"CCActionEaseSineOut";
+    
     _camera.position = ccp(0.5f * winsize.width , 0.5f * winsize.height);
     
     [_worldContainer addChild:_camera];
@@ -76,11 +79,15 @@
     
     if (animated)
     {
-        CCActionInterval *action = [self.camera actionToMoveToRect:targetRect duration:2 completion:nil];
+        CCActionInterval *action = [self.camera actionToMoveToRect:targetRect
+                                                          duration:2
+                                                            easing:Nil
+                                                        completion:^(CCGameCameraNode *camera)
+        {   
+            NSLog(@"Finished Moving!");
+        }];
 
-        // add easing to the action
-        CCAction *ease = [CCActionEaseSineInOut actionWithAction:action];
-        [self.camera runAction:ease];
+        [self.camera runAction:action];
 
     }
     else
@@ -99,11 +106,16 @@
     
     if (animated)
     {
-        CCActionInterval *action = [self.camera actionToMoveToRect:targetRect duration:2 completion:nil];
+        CCActionInterval *action = [self.camera actionToMoveToRect:targetRect
+                                                          duration:2
+                                                            easing:[CCActionEaseBounceOut class]
+                                                        completion:^(CCGameCameraNode *camera)
+        {
+            
+            NSLog(@"Finished Moving!");
+        }];
         
-        // add easing to the action
-        CCAction *ease = [CCActionEaseSineInOut actionWithAction:action];
-        [self.camera runAction:ease];
+        [self.camera runAction:action];
         
     }
     else
