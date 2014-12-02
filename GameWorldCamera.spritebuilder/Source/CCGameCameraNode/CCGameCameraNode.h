@@ -66,7 +66,8 @@ ii) allow its contentSize to match your [CCDirector sharedDirector].viewSize
  */
 @property (nonatomic, strong) NSString *defaultEasingClassName;
 
-
+@property (nonatomic, weak, readonly) CCNode *worldNode;
+          
 
 #pragma mark - Initialization Method
 

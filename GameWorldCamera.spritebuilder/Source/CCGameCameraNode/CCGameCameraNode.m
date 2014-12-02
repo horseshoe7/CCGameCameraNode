@@ -39,17 +39,28 @@
     
 }
 
-@property (nonatomic, weak) CCNode *worldNode;
+@property (nonatomic, weak, readwrite) CCNode *worldNode;
 @property (nonatomic, assign) BOOL parallaxMode;  // yes if your world contains parallax, NO if you want to (one day) allow rotate
 
 @end
 
 @implementation CCGameCameraNode
 
+- (NSString*)description
+{
+    return [NSString stringWithFormat:@"%@ - pos:%@\t worldRect:%@",
+            [super description],
+            NSStringFromCGPoint(self.positionInWorldCoords),
+            NSStringFromCGRect(self.visibleWorldRect)];
+                                                                      
+}
+
 - (instancetype)initWithWorld:(CCNode*)gameboard
 {
     self = [super init];
     if (self) {
+        
+        self.name = @"Camera";
         
         [self addChild:gameboard];
         gameboard.anchorPoint = CGPointZero;
@@ -356,6 +367,8 @@
     [self stopAllActions];
 }
 
+#pragma mark - Helper Methods
+
 - (CCActionInterval*)easedActionUsingClass:(Class)easingClass action:(CCActionInterval*)action
 {
     if (easingClass != Nil) {
@@ -390,6 +403,8 @@
     
     return sequence;
 }
+
+#pragma mark - Action Factory Methods
 
 - (CCActionInterval*)actionToMoveToPosition:(CGPoint)point duration:(CCTime)duration
 {
